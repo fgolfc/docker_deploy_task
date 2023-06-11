@@ -1,23 +1,17 @@
 version: "3"
 services:
   db:
-    image: postgres:12
-    ports:
-      - 5433:5432
+    image: postgres
     volumes:
       - .tmp/db:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: 'user1'
-      POSTGRES_PASSWORD: 'user1-pass'
-    restart: always
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+      - POSTGRES_PASSWORD=password
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/still-plains-78980
     ports:
       - "3000:3000"
     depends_on:
       - db
-    volumes:
-      - .:/app
-    restart: always
