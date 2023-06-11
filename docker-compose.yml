@@ -1,0 +1,23 @@
+version: "3"
+services:
+  db:
+    image: postgres:12
+    ports:
+      - 5433:5432
+    volumes:
+      - .tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'user1'
+      POSTGRES_PASSWORD: 'user1-pass'
+    restart: always
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    restart: always
